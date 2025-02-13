@@ -27,7 +27,6 @@ Follow these steps to get started:
 - Follow the setup instructions in the [AltTester® Documentation](https://altTester.com/docs/sdk/latest/pages/get-started.html#import-altTester-package-in-unity-editor).
 
 ### 4. Build the Standalone Game
-- Name the build **DragonCrasher**.
 - Build the project following the instructions in the [AltTester® Documentation](https://alttester.com/docs/sdk/latest/pages/get-started.html#instrument-your-app-with-alttester-unity-sdk).
 
 ### 5. Set Up AltTester® Desktop
