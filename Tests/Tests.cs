@@ -1,8 +1,9 @@
-using NUnit.Framework;
-using AltTester.AltTesterUnitySDK.Driver;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using AltTester.AltTesterUnitySDK.Driver;
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 public class Tests
 {
@@ -24,6 +25,8 @@ public class Tests
     public void SetUp()
     {
         altDriver = new AltDriver();
+        altDriver.SetDelayAfterCommand(0.2f);
+        altDriver.LoadScene("MainMenu");
     }
 
     // Tear down the AltDriver after all tests
@@ -35,6 +38,10 @@ public class Tests
     [TearDown]
     public void TearDown()
     {
+        if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Failed)
+        {
+            altDriver.LoadScene("MainMenu");
+        }
         ClickButton(HomeButtonXPath);
     }
 
@@ -48,7 +55,7 @@ public class Tests
 
         var initialGold = int.Parse(GetText(GoldCountXPath));
         ClickButton(BuyButtonXPath);
-        Thread.Sleep(1000);
+        Helper.Wait();
 
         var finalGold = int.Parse(GetText(GoldCountXPath));
         Assert.That(finalGold, Is.EqualTo(initialGold + 50));
@@ -61,7 +68,7 @@ public class Tests
         ClickButton(ShopButtonXPath);
         ClickButton("//shop-gem-shoptab");
         ClickButton(BuyButtonXPath);
-        Thread.Sleep(1000);
+        Helper.Wait();
 
         ClickButton("//shop-gold-shoptab");
 
@@ -88,11 +95,10 @@ public class Tests
     public void TestPlay()
     {
         ClickButton(PlayButtonXPath);
-        Thread.Sleep(1000);
-
+        Helper.Wait();
         ClickButton(PauseButtonXPath);
         ClickButton(ResumeButtonXPath);
-        Thread.Sleep(1000);
+        Helper.Wait();
 
         ClickButton(PauseButtonXPath);
         ClickButton("//pause__quit-button");
@@ -119,7 +125,7 @@ public class Tests
 
         bool allSlotsEnabled = CheckInventorySlotsEnabled();
         ClickButton("//char__auto-equip-button");
-        Thread.Sleep(1000);
+        Helper.Wait();
 
         WaitForElementNotPresent("//char-inventory__slot1-add");
         WaitForElementNotPresent("//char-inventory__slot2-add");
@@ -162,7 +168,7 @@ public class Tests
         ClickButton("//safe-area/OptionsBar/options-bar/options-bar__button");
         ClickButton("//settings__account/settings__social-button2");
         ClickButton("//settings__panel-back-button");
-        Thread.Sleep(1000);
+        Helper.Wait();
     }
 
     private bool CheckInventorySlotsEnabled()
