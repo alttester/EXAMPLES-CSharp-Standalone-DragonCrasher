@@ -15,10 +15,11 @@ public class Tests
     private const string GoldCountXPath = "//options-bar__gold-count";
     private const string GemCountXPath = "//options-bar__gem-count";
     private const string PlayButtonXPath = "//home-play__level-button";
-    private const string PauseButtonXPath = "//pause__button-container";
-    private const string ResumeButtonXPath = "//pause__resume-button";
+    private const string PauseButtonXPath = "//pause__button";
+    private const string ResumeButtonXPath = "//pause-screen__resume-button";
     private const string CharButtonXPath = "//menu__char-button";
-    private const string BuyButtonXPath = "//shop-item__buy-button";
+    private const string BuyButtonXPath = "//shop-item_buy-button-container";
+    private const string BuyGemButtonXPath = "//shop__gem-scrollview//shop-item_buy-button-container";
 
     // Set up AltDriver before any test runs
     [OneTimeSetUp]
@@ -64,14 +65,14 @@ public class Tests
     [Test]
     public void TestBuyGems()
     {
+        Helper.Wait();
         var initialGems = int.Parse(GetText(GemCountXPath));
         ClickButton(ShopButtonXPath);
         ClickButton("//shop-gem-shoptab");
-        ClickButton(BuyButtonXPath);
         Helper.Wait();
+        ClickButton(BuyGemButtonXPath);
 
         ClickButton("//shop-gold-shoptab");
-
         var finalGems = int.Parse(GetText(GemCountXPath));
         Assert.That(finalGems, Is.EqualTo(initialGems + 10));
     }
@@ -101,7 +102,7 @@ public class Tests
         Helper.Wait();
 
         ClickButton(PauseButtonXPath);
-        ClickButton("//pause__quit-button");
+        ClickButton("//pause-screen__quit-button");
     }
 
     [Test]
@@ -165,8 +166,8 @@ public class Tests
     // Helper functions
     private void ResetPlayerCurrency()
     {
-        ClickButton("//safe-area/OptionsBar/options-bar/options-bar__button");
-        ClickButton("//settings__account/settings__social-button2");
+        ClickButton("//OptionsBar/options-bar/options-bar__button");
+        ClickButton("//settings-account/settings__social-button2");
         ClickButton("//settings__panel-back-button");
         Helper.Wait();
     }
