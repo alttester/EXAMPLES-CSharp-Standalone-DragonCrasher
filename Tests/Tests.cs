@@ -103,6 +103,7 @@ public class Tests
 
         ClickButton(PauseButtonXPath);
         ClickButton("//pause-screen__quit-button");
+        Helper.Wait();
     }
 
     [Test]
