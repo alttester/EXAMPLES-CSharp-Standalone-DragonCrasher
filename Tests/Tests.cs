@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using AltTester.AltTesterUnitySDK.Driver;
+using AltTester.AltTesterSDK.Driver;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
