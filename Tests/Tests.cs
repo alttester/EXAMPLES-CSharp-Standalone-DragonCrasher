@@ -16,10 +16,11 @@ public class Tests
     private const string GemCountXPath = "//options-bar__gem-count";
     private const string PlayButtonXPath = "//home-play__level-button";
     private const string PauseButtonXPath = "//pause__button";
-    private const string ResumeButtonXPath = "//pause-screen__resume-button";
+    private const string ResumeButtonXPath = "//pause__resume-button";
     private const string CharButtonXPath = "//menu__char-button";
     private const string BuyButtonXPath = "//shop-item_buy-button-container";
-    private const string BuyGemButtonXPath = "//shop__gem-scrollview//shop-item_buy-button-container";
+    private const string BuyGemButtonXPath = "//shop-item__container/shop-item__contents/shop-item__buy-button/shop-item_buy-button-container";
+
 
     // Set up AltDriver before any test runs
     [OneTimeSetUp]
@@ -65,15 +66,15 @@ public class Tests
     [Test]
     public void TestBuyGems()
     {
-        Helper.Wait();
-        var initialGems = int.Parse(GetText(GemCountXPath));
+        ResetPlayerCurrency();
+        var initialGems = int.Parse(WaitForText(GemCountXPath, "0"));
         ClickButton(ShopButtonXPath);
         ClickButton("//shop-gem-shoptab");
         Helper.Wait();
         ClickButton(BuyGemButtonXPath);
 
         ClickButton("//shop-gold-shoptab");
-        var finalGems = int.Parse(GetText(GemCountXPath));
+        var finalGems = int.Parse(WaitForText(GemCountXPath, "10"));
         Assert.That(finalGems, Is.EqualTo(initialGems + 10));
     }
 
@@ -102,7 +103,7 @@ public class Tests
         Helper.Wait();
 
         ClickButton(PauseButtonXPath);
-        ClickButton("//pause-screen__quit-button");
+        ClickButton("//pause__quit-button");
         Helper.Wait();
     }
 
@@ -168,7 +169,7 @@ public class Tests
     private void ResetPlayerCurrency()
     {
         ClickButton("//OptionsBar/options-bar/options-bar__button");
-        ClickButton("//settings-account/settings__social-button2");
+        ClickButton("//settings__account//settings__social-button2");
         ClickButton("//settings__panel-back-button");
         Helper.Wait();
     }
@@ -188,10 +189,23 @@ public class Tests
         altDriver.Click(button.GetScreenPosition());
     }
 
-    private string GetText(string xpath)
+    private string GetText(string xpath) => altDriver.WaitForObject(By.PATH, xpath).GetText();
+    private string WaitForText(string xpath, string expectedText)
     {
-        return altDriver.WaitForObject(By.PATH, xpath).GetText();
+        var altObject = altDriver.WaitForObject(By.PATH, xpath);
+
+        var timeout = 0f;
+        while (timeout < 20)
+        {
+            var text = altObject.GetText();
+            if (text == expectedText)
+                return text;
+            Thread.Sleep(500);
+            timeout += 0.5f;
+        }
+        throw new AltException("Expected text not found");
     }
+
 
     private void WaitForElementNotPresent(string xpath)
     {
